@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./php
+    container_name: cinema_web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./www:/var/www/html
+      - ./apache/vhost.conf:/etc/apache2/sites-available/000-default.conf
+    depends_on:
+      - db
+    environment:
+      APACHE_RUN_USER: www-data
+      APACHE_RUN_GROUP: www-data
+
+  db:
+    image: mysql:5.7
+    container_name: cinema_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cinema_db
+      MYSQL_USER: cinema_user
+      MYSQL_PASSWORD: cinema_pass
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: cinema_phpmyadmin
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: cinema_user
+      PMA_PASSWORD: cinema_pass
+      PMA_ARBITRARY: 1
+    depends_on:
+      - db
+
+volumes:
+  db_data:
