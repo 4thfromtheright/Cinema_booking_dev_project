@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * CbUsers
@@ -10,8 +11,28 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="CB_USERS", uniqueConstraints={@ORM\UniqueConstraint(name="email", columns={"email"})})
  * @ORM\Entity
  */
-class CbUsers
+class CbUsers implements UserInterface
 {
+    public function getRoles(): array
+    {
+        return ['ROLE_USER'];
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->passwordHash;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->email;
+    }
+
+    public function getSalt() {}
+    public function eraseCredentials() {}
+
+
+
     /**
      * @var int
      *

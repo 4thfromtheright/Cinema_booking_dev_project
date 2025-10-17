@@ -1,23 +1,32 @@
 security:
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    encoders:
+        App\Entity\CbUsers:
+            algorithm: bcrypt
+
     providers:
-        users_in_memory: { memory: null }
+        app_user_provider:
+            entity:
+                class: App\Entity\CbUsers
+                property: email
+
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        main:
-            anonymous: lazy
-            provider: users_in_memory
+        login:
+            pattern:  ^/api/auth/login
+            stateless: true
+            anonymous: true
+            json_login:
+                check_path: /api/auth/login
+                username_path: email
+                password_path: password
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#firewalls-authentication
+        api:
+            pattern:   ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/home, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/bookings, roles: ROLE_USER }
+#straight from the docs
