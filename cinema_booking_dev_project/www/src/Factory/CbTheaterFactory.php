@@ -2,6 +2,7 @@
 
 namespace App\Factory;
 
+use App\Entity\CbShowings;
 use App\Entity\CbTheater;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -54,6 +55,11 @@ class CbTheaterFactory implements FactoryInterface
     {
         $this->em->remove($entity);
         $this->em->flush();
+    }
+
+    public function findAll()
+    {
+        return $this->em->getRepository(CbShowings::class)->findAll();
     }
 }
 

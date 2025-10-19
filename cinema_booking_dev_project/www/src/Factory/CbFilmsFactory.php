@@ -55,4 +55,9 @@ class CbFilmsFactory implements FactoryInterface
         $this->em->remove($entity);
         $this->em->flush();
     }
+
+    public function findAll()
+    {
+        return $this->em->getRepository(CbFilms::class)->findAll();
+    }
 }

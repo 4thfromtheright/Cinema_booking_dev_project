@@ -55,4 +55,9 @@ class CbSeatsFactory implements FactoryInterface
         $this->em->remove($entity);
         $this->em->flush();
     }
+
+    public function findAll()
+    {
+        return $this->em->getRepository(CbSeats::class)->findAll();
+    }
 }

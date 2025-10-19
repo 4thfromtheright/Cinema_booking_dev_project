@@ -55,4 +55,9 @@ class CbShowingsFactory implements FactoryInterface
         $this->em->remove($entity);
         $this->em->flush();
     }
+
+    public function findAll()
+    {
+        return $this->em->getRepository(CbShowings::class)->findAll();
+    }
 }

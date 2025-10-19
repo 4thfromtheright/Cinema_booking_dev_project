@@ -55,4 +55,9 @@ class CbUsersFactory implements FactoryInterface
         $this->em->remove($entity);
         $this->em->flush();
     }
+
+    public function findAll()
+    {
+        return $this->em->getRepository(CbUsers::class)->findAll();
+    }
 }

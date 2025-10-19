@@ -59,4 +59,9 @@ class CbBookingFactory implements FactoryInterface
         $this->em->remove($booking);
         $this->em->flush();
     }
+
+    public function findAll()
+    {
+        return $this->em->getRepository(CbBooking::class)->findAll();
+    }
 }

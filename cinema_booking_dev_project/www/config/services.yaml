@@ -1,21 +1,21 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
-parameters:
-
 # config/services.yaml
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        public: false
 
-        # Controllers are public
-        App\Controller\:
-            resource: '../src/Controller'
-            public: true
+parameters:
+# You can define global parameters here if needed
+# e.g. app.default_timezone: 'Africa/Johannesburg'
+
+services:
+    # default configuration for services in this file
+    _defaults:
+        autowire: true      # Automatically inject dependencies
+        autoconfigure: true # Automatically apply Symfony tags
+        public: false       # Services are private by default
+
+    # Controllers
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+        public: true        # Controllers must be public for routing
 
     # Factories
     App\Factory\:
@@ -25,13 +25,6 @@ services:
     App\Service\:
         resource: '../src/Service/*'
 
-
-    # Bind interfaces to concrete implementations
-    App\Services\FactoryServiceProviderInterface: '@App\Services\FactoryServiceProvider'
-    # Bind interfaces to concrete implementations explicitly if needed
-    App\Services\UserServiceInterface: '@App\Services\UserService'
-    App\Services\HomeServiceInterface: '@App\Services\HomeService'
-    App\Services\BookingServiceInterface: '@App\Services\BookingService'
-
-
-
+    # Explicit alias for your FactoryServiceProviderInterface
+    App\Services\FactoryServiceProviderInterface:
+        alias: App\Services\FactoryServiceProvider
