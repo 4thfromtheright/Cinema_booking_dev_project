@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@ngx-progressbar/core": "^5.3.2",
+    "@ngx-progressbar/http": "^5.3.2"
+  }
+}

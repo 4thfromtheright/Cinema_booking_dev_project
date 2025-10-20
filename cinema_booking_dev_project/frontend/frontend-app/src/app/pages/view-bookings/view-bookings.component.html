@@ -1,13 +1,22 @@
 <div class="view-bookings-container">
-  <h2>My Bookings</h2>
-  <ul>
-    <li *ngFor="let b of bookings">
-      <strong>{{ b.filmTitle }}</strong> at
-      <em>{{ b.theaterName }}</em> -
-      Seat: {{ b.seatNumber }}
-      <button (click)="cancel(b.id)">Cancel</button>
-    </li>
-  </ul>
 
-  <p *ngIf="bookings.length === 0">You have no bookings yet.</p>
+  <ng-container *ngIf="isLoggedIn(); else loggedOut">
+    <h2>My Bookings</h2>
+    <ul>
+      <li *ngFor="let b of bookings">
+        <strong>{{ b.filmTitle }}</strong> at
+        <em>{{ b.theaterName }}</em> -
+        Seat: {{ b.seatNumber }}
+        <button (click)="cancel(b.id)">Cancel</button>
+      </li>
+    </ul>
+    <p *ngIf="bookings.length === 0">You have no bookings yet.</p>
+  </ng-container>
+
+  <!-- Template shown if user is NOT logged in -->
+  <ng-template #loggedOut>
+    <p>You are logged out.</p>
+    <button (click)="goToLogin()">Log In</button>
+  </ng-template>
+
 </div>

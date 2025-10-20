@@ -1,6 +1,7 @@
 // src/app/pages/view-bookings/view-bookings.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-bookings',
@@ -9,7 +10,7 @@ import { ApiService } from '../../services/api.service';
 export class ViewBookingsComponent implements OnInit {
   bookings: any[] = [];
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private router: Router) {}
 
   ngOnInit() {
     const user = this.api.getSessionUser();
@@ -28,5 +29,14 @@ export class ViewBookingsComponent implements OnInit {
       },
       error: err => console.error('Failed to cancel booking', err)
     });
+  }
+
+  goToLogin(){
+  this.router.navigate(['/login']);
+
+  }
+
+  isLoggedIn(){
+    return this.api.isLoggedIn();
   }
 }

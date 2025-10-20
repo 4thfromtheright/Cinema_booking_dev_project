@@ -1,0 +1,15 @@
+# Symfony
+/www/html/var/
+/www/html/vendor/
+/www/html/node_modules/
+/www/html/.env.local
+/.idea
+/.vscode
+
+# Docker
+db_data/
+
+node_modules/
+.DS_Store
+*.log
+dist/

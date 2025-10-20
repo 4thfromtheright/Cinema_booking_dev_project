@@ -2,6 +2,7 @@
   padding: 20px;
 }
 
+
 .seats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -60,19 +61,19 @@ p, label {
 
 /* Buttons */
 button {
-  background-color: #ff6600;
   border: none;
   color: #ffffff; /* pure white text */
   font-size: 1.3rem;
   padding: 12px 28px;
   margin: 10px 5px;
-  border-radius: 8px;
+
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 
 button:hover {
-  background-color: #e65c00;
+  
+  background-color: #ffffff;
   transform: translateY(-2px);
 }
 
@@ -94,7 +95,7 @@ select {
 input:focus,
 select:focus {
   outline: none;
-  border-color: #ff6600;
+  border-color: #c71414fa;
 }
 
 /* Seats grid */
@@ -116,7 +117,7 @@ select:focus {
 }
 
 .seats-grid button.selected {
-  background-color: #ff6600;
+  background-color: #b41919;
   color: #ffffff;
 }
 
@@ -152,12 +153,7 @@ select:focus {
   color: #ffffff;
 }
 
-/* Links */
-a {
-  color: #ff6600;
-  cursor: pointer;
-  text-decoration: none;
-}
+
 
 a:hover {
   text-decoration: underline;

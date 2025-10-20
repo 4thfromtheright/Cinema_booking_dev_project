@@ -4,7 +4,6 @@
     <h1>Cinema Booking</h1>
     <div class="header-buttons">
       <button *ngIf="!isLoggedIn()" (click)="goToLogin()">Login / Sign Up</button>
-<button *ngIf="isLoggedIn()" (click)="goToBookings()">My Bookings</button>
 
     </div>
   </header>
@@ -36,7 +35,11 @@
     <h2>Available Showings</h2>
     <div class="showing-card" *ngFor="let showing of showings">
       <div class="showing-info">
-        <p><strong>Time:</strong> {{ showing.showTime }}</p>
+        <p><strong>Theater:</strong> {{ showing.theaterName }}</p>
+         <p><strong>Movie:</strong> {{ showing.filmTitle }}</p>
+          <p><strong>Genre:</strong> {{ showing.filmGenre }}</p>
+              <p><strong>Duration:</strong> {{ showing.durationMinutes }}</p>
+          <p><strong>Time:</strong> {{ showing.showTime }}</p>
 
       </div>
       <button (click)="book(showing)">Book Now</button>

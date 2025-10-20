@@ -10,12 +10,16 @@ import { tap } from 'rxjs/operators';
 export class ApiService {
   private apiUrl = '/api';
   private currentUser: any = null;
-
+ private homeDataCache :any=null;
+  private homeBookingsCache :any=null;
+ private cacheTimestamp: number = 0;
+   private cacheInterval = 3 * 60 * 1000; // 3 minutes in ms
 constructor(private http: HttpClient) {
   const savedUser = localStorage.getItem('currentUser');
   if (savedUser) {
     this.currentUser = JSON.parse(savedUser);
   }
+
 }
 
   // Session helpers
@@ -41,6 +45,7 @@ constructor(private http: HttpClient) {
 
   // Auth
 login(email: string, password: string): Observable<any> {
+
   return this.http.post<any>(
     `${this.apiUrl}/auth/login`,
     { email, password }
@@ -66,12 +71,14 @@ signup(username: string, email: string, password: string): Observable<any> {
 
 
   // Home page
+
+
   getCinemas(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/cinema/`);
   }
 
   getTheaters(cinemaId: number): Observable<any[]> {
-   return this.http.get<any[]>(`${this.apiUrl}/theaters/${cinemaId}/theaters`);
+   return this.http.get<any[]>(`${this.apiUrl}/theaters/${cinemaId}`);
   }
 
   getFilms(theaterId: number): Observable<any[]> {
@@ -101,9 +108,22 @@ console.log(body)
 
   // View bookings
   getBookings(): Observable<any[]> {
- const user = this.getSessionUser();
-    return this.http.get<any[]>(`${this.apiUrl}/user/bookings/${ user.userId}`, { headers: this.authHeaders() }); 
+  const user = this.getSessionUser();
+  const now = Date.now();
+    // If cached data exists and is still valid, return it
+    if (this.homeBookingsCache && now - this.cacheTimestamp < this.cacheInterval) {
+      return of(this.homeBookingsCache);
+    }
+
+    // Otherwise, fetch from API and cache it
+    return  this.http.get<any[]>(`${this.apiUrl}/bookings/user/${ user.userId}`, { headers: this.authHeaders() }).pipe(
+      tap(data => {
+        this.homeBookingsCache = data;
+        this.cacheTimestamp = Date.now();
+      })
+    );
   }
+  
 
   cancelBooking(bookingId: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/bookings/${bookingId}`, { headers: this.authHeaders() });
@@ -129,11 +149,22 @@ console.log(body)
     return this.http.get<any[]>(`${this.apiUrl}/showings/theater/${theaterId}`); 
   }
 
-  getUserById(userId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/users/${userId}`); 
+
+getHomeDatacached(): Observable<any> {
+    const now = Date.now();
+
+    // If cached data exists and is still valid, return it
+    if (this.homeDataCache && now - this.cacheTimestamp < this.cacheInterval) {
+      return of(this.homeDataCache);
+    }
+
+    // Otherwise, fetch from API and cache it
+    return  this.http.get<any>(`${this.apiUrl}/home/`).pipe(
+      tap(data => {
+        this.homeDataCache = data;
+        this.cacheTimestamp = Date.now();
+      })
+    );
   }
 
-  getHomeData(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/home`);
-  }
 }

@@ -19,6 +19,9 @@ export class LoginComponent {
     this.isSignup = !this.isSignup;
     this.errorMessage = '';
   }
+  logOut(){
+    this.api.logout();
+  }
 
   submit() {
     if (this.isSignup) {
@@ -34,12 +37,14 @@ export class LoginComponent {
       this.api.login(this.email, this.password).subscribe({
         next: () => {
           this.router.navigate(['/']);
+           this.api.getBookings().subscribe();
         },
         error: err => {
           this.errorMessage = err.error?.message || 'Login failed';
         }
       });
     }
+ 
   }
 
   isLoggedIn(): boolean {

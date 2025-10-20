@@ -7,6 +7,7 @@ import { ApiService } from '../../services/api.service';
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
+  homePage: any={};
   cinemas: any[] = [];
   theaters: any[] = [];
   films: any[] = [];
@@ -14,7 +15,6 @@ export class HomeComponent implements OnInit {
   selectedCinema: any = null;
   selectedTheater: any = null;
   selectedFilm: any = null;
-
   constructor(private api: ApiService, private router: Router) {}
   
 isLoggedIn(): boolean {
@@ -26,29 +26,64 @@ goToLogin() {
 }
 
 goToBookings() {
-  this.router.navigate(['/view-bookings']);
-}
-
-  ngOnInit() {
-    this.api.getCinemas().subscribe(data => this.cinemas = data);
+    this.router.navigate(['/view-bookings']);
   }
+
+   ngOnInit() {
+    this.api.getHomeDatacached().subscribe({
+      next: (data) => {
+   
+        this.homePage = data;
+        this.cinemas = data.cinemas || [];    
+      },
+      error: (err) => {
+        console.error('Error loading home data:', err);
+      }
+    });
+  }
+
 
   selectCinema(cinema: any) {
     this.selectedCinema = cinema;
-    this.api.getTheaters(cinema.cinemaId).subscribe(data => this.theaters = data);
+    const cinemaId = cinema.cinemaId;
+
+    // Filter theaters that belong to this cinema
+    this.theaters = (this.homePage.theaters || []).filter(
+      (theater: any) => theater.cinemaId === cinemaId
+    );
+
     this.films = [];
     this.showings = [];
+    this.selectedTheater = null;
+    this.selectedFilm = null;
   }
-
-  selectTheater(theater: any) {
+   selectTheater(theater: any) {
     this.selectedTheater = theater;
-    this.api.getFilms(theater.theaterId).subscribe(data => this.films = data);
-    this.showings = [];
+    const theaterId = theater.theaterId;
+
+    // Filter showings that belong to this theater
+    this.showings = (this.homePage.showings || []).filter(
+      (showing: any) => showing.theaterId === theaterId
+    );
+
+    // From those showings, get the related films (avoid duplicates)
+    const filmIds = new Set(this.showings.map((s: any) => s.filmId));
+    this.films = (this.homePage.films || []).filter((film: any) =>
+      filmIds.has(film.filmId)
+    );
+
+    this.selectedFilm = null;
   }
 
   selectFilm(film: any) {
     this.selectedFilm = film;
-    this.api.getShowings(film.filmId).subscribe(data => this.showings = data);
+    const filmId = film.filmId;
+    const theaterId = this.selectedTheater?.theaterId;
+
+    this.showings = (this.homePage.showings || []).filter(
+      (showing: any) =>
+        showing.filmId === filmId && showing.theaterId === theaterId
+    );
   }
 
 book(showing: any) {

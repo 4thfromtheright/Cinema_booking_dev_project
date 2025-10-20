@@ -1,22 +1,28 @@
 <div class="login-container">
   <h1>{{ isSignup ? 'Sign Up' : 'Login' }}</h1>
   
-  <form (submit)="submit(); $event.preventDefault()">
+  <form (ngSubmit)="submit()">
     <div *ngIf="isSignup">
       <label>Name</label>
+         <div></div>
       <input type="text" [(ngModel)]="name" name="name" required>
     </div>
 
     <label>Email</label>
+       <div></div>
     <input type="email" [(ngModel)]="email" name="email" required>
-
+    <div></div>
+       <div></div>
     <label>Password</label>
+       <div></div>
     <input type="password" [(ngModel)]="password" name="password" required>
 
     <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-
+   <div></div>
     <button type="submit">{{ isSignup ? 'Sign Up' : 'Login' }}</button>
+      
   </form>
+<button *ngIf="isLoggedIn()" (click)="logOut()">Log Out</button>
 
   <p>
     <a (click)="toggleMode()" style="cursor:pointer">
@@ -24,5 +30,5 @@
     </a>
   </p>
 
-  <button *ngIf="isLoggedIn()" (click)="goToBookings()">View My Bookings</button>
+
 </div>
