@@ -1,34 +1,36 @@
 <?php
-// src/Controller/HomeController.php
+
 namespace App\Controller;
 
-use App\Service\HomeServiceInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\BookingService;
+use App\Service\CinemaService;
+use App\Service\FilmService;
+use App\Utils\EntityMapperUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
-class HomeController extends AbstractController
+class HomeController
 {
-    private $homeService;
-    private $security;
+    private $cinemaService;
+    private $filmService;
 
-    public function __construct(HomeServiceInterface $homeService, Security $security)
-    {
-        $this->homeService = $homeService;
-        $this->security = $security;
+
+    public function __construct(CinemaService $cinemaService, FilmService   $filmService) {
+        $this->cinemaService = $cinemaService;
+        $this->filmService = $filmService;
+
     }
 
     /**
      * @Route("/api/home", name="home", methods={"GET"})
      */
-    public function home(): JsonResponse
+    public function index()
     {
-        $user = $this->security->getUser();
-
-        return $this->json([
-            'user' => $user ? $user->getEmail() : null,
-            'cinemas' => $this->homeService->listCinemas(),
+        $cinemas = $this->cinemaService->getAll();
+        $films = $this->filmService->getAll();
+        return new JsonResponse([
+            'cinemas' => EntityMapperUtils::mapEntitiesToArrays($cinemas,'cinema'),
+            'films' => EntityMapperUtils::mapEntitiesToArrays($films,'cinema')
         ]);
     }
 }

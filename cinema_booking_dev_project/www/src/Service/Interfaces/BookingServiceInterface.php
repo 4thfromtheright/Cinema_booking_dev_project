@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Interfaces;
 
 interface BookingServiceInterface
 {
-    public function createBooking(array $data);
-    public function getBookingById(int $id);
-    public function getBookingsByUser(int $userId);
-    public function cancelBooking(int $id);
+
+    public function bookSeats(int $showingId, int $userId, array $seatNumbers): array;
 }

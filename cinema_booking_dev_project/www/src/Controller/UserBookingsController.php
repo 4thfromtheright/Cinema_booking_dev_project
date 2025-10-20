@@ -1,44 +1,28 @@
 <?php
+
 namespace App\Controller;
 
+use App\Utils\EntityMapperUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\FactoryServiceProviderInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\BookingService;
 
 class UserBookingsController extends AbstractController
 {
-    private $factoryProvider;
+    private $bookingService;
 
-    public function __construct(FactoryServiceProviderInterface $factoryProvider)
+    public function __construct(BookingService $bookingService)
     {
-        $this->factoryProvider = $factoryProvider;
+        $this->bookingService = $bookingService;
     }
 
     /**
-     * @Route("/api/users/{id}/bookings", name="api_user_bookings", methods={"GET"})
+     * @Route("/api/user/bookings/{userId}", name="api_user_bookings", methods={"GET"})
      */
-    public function index($id): JsonResponse
+    public function getUserBookings(int $userId): JsonResponse
     {
-        $bookings = $this->factoryProvider->getBookingFactory()->getBy(['user' => $id]);
-        return $this->json($bookings);
-    }
-
-    /**
-     * @Route("/api/users/{id}/bookings/{bookingId}", name="api_user_booking_cancel", methods={"DELETE"})
-     */
-    public function cancel($id, $bookingId): JsonResponse
-    {
-        $booking = $this->factoryProvider->getBookingFactory()->getById($bookingId);
-        if (!$booking) {
-            return $this->json(['error' => 'Booking not found'], 404);
-        }
-
-        if ($booking->getUser()->getUserId() != $id) {
-            return $this->json(['error' => 'Forbidden'], 403);
-        }
-
-        $this->factoryProvider->getBookingFactory()->delete($booking);
-        return $this->json(['success' => true]);
+        $bookings = $this->bookingService->getBookingsByUser($userId);
+        return $this->json(    EntityMapperUtils::mapEntitiesToArrays($bookings,'booking'));
     }
 }

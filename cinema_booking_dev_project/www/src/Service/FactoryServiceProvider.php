@@ -1,14 +1,15 @@
 <?php
 namespace App\Service;
 
+use App\Factory\CbBookingFactory;
 use App\Factory\CbCinemaFactory;
 use App\Factory\CbFilmsFactory;
-use App\Factory\CbTheaterFactory;
-use App\Factory\CbShowingsFactory;
 use App\Factory\CbSeatsFactory;
+use App\Factory\CbShowingsFactory;
+use App\Factory\CbTheaterFactory;
 use App\Factory\CbUsersFactory;
-use App\Factory\CbBookingFactory;
 use App\Factory\FactoryInterface;
+use App\Service\Interfaces\FactoryServiceProviderInterface;
 
 class FactoryServiceProvider implements FactoryServiceProviderInterface
 {
@@ -22,6 +23,7 @@ class FactoryServiceProvider implements FactoryServiceProviderInterface
 
 
     // so here i actually use concrete classes, for use in all the other services
+    //i intended to use this but forgot about it, oops
     public function __construct(
         CbCinemaFactory $cinemaFactory,
         CbFilmsFactory $filmFactory,

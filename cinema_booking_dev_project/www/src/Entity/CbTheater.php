@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * CbTheater
@@ -45,6 +47,18 @@ class CbTheater
      */
     private $cinema;
 
+    /**
+     * @var Collection|CbSeats[]
+     *
+     * @ORM\OneToMany(targetEntity="CbSeats", mappedBy="theater")
+     */
+    private $seats;
+
+    public function __construct()
+    {
+        $this->seats = new ArrayCollection();
+    }
+
     public function getTheaterId(): ?int
     {
         return $this->theaterId;
@@ -58,7 +72,6 @@ class CbTheater
     public function setName(string $name): self
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -70,7 +83,6 @@ class CbTheater
     public function setSeatCount(int $seatCount): self
     {
         $this->seatCount = $seatCount;
-
         return $this;
     }
 
@@ -82,9 +94,33 @@ class CbTheater
     public function setCinema(?CbCinema $cinema): self
     {
         $this->cinema = $cinema;
-
         return $this;
     }
 
+    /**
+     * @return Collection|CbSeats[]
+     */
+    public function getSeats(): Collection
+    {
+        return $this->seats;
+    }
 
+    public function addSeat(CbSeats $seat): self
+    {
+        if (!$this->seats->contains($seat)) {
+            $this->seats[] = $seat;
+            $seat->setTheater($this);
+        }
+        return $this;
+    }
+
+    public function removeSeat(CbSeats $seat): self
+    {
+        if ($this->seats->removeElement($seat)) {
+            if ($seat->getTheater() === $this) {
+                $seat->setTheater(null);
+            }
+        }
+        return $this;
+    }
 }

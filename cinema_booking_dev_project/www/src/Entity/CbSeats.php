@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CbSeats
  *
- * @ORM\Table(name="CB_SEATS", uniqueConstraints={@ORM\UniqueConstraint(name="theater_id", columns={"theater_id", "seat_number"})}, indexes={@ORM\Index(name="IDX_62E8A6E8D70E4479", columns={"theater_id"})})
+ * @ORM\Table(name="CB_SEATS", indexes={@ORM\Index(name="theater_id", columns={"theater_id"})})
  * @ORM\Entity
  */
 class CbSeats
@@ -24,16 +24,21 @@ class CbSeats
     /**
      * @var string
      *
-     * @ORM\Column(name="seat_number", type="string", length=10, nullable=false)
+     * @ORM\Column(name="seat_number", type="string", length=5, nullable=false)
      */
     private $seatNumber;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="row_label", type="string", length=5, nullable=true)
-     */
-    private $rowLabel;
+    public function getSeatNumber(): ?string
+    {
+        return $this->seatNumber;
+    }
+
+    public function setSeatNumber(string $seatNumber): self
+    {
+        $this->seatNumber = $seatNumber;
+        return $this;
+    }
+
 
     /**
      * @var \CbTheater
@@ -50,29 +55,6 @@ class CbSeats
         return $this->seatId;
     }
 
-    public function getSeatNumber(): ?string
-    {
-        return $this->seatNumber;
-    }
-
-    public function setSeatNumber(string $seatNumber): self
-    {
-        $this->seatNumber = $seatNumber;
-
-        return $this;
-    }
-
-    public function getRowLabel(): ?string
-    {
-        return $this->rowLabel;
-    }
-
-    public function setRowLabel(?string $rowLabel): self
-    {
-        $this->rowLabel = $rowLabel;
-
-        return $this;
-    }
 
     public function getTheater(): ?CbTheater
     {
@@ -82,9 +64,6 @@ class CbSeats
     public function setTheater(?CbTheater $theater): self
     {
         $this->theater = $theater;
-
         return $this;
     }
-
-
 }

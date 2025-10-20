@@ -1,7 +1,8 @@
 <?php
 namespace App\Service;
 
-use App\Service\FactoryServiceProviderInterface;
+use App\Service\Interfaces\FactoryServiceProviderInterface;
+use App\Service\Interfaces\HomeServiceInterface;
 
 class HomeService implements HomeServiceInterface
 {

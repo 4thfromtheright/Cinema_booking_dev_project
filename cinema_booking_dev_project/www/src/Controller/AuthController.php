@@ -1,35 +1,48 @@
 <?php
-// src/Controller/AuthController.php
+
 namespace App\Controller;
 
-use App\Service\UserServiceInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
+use App\Service\AuthService;
+use App\Service\Interfaces\AuthServiceInterface;
+use App\Utils\EntityMapperUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @Route("/api/auth")
+ */
 class AuthController extends AbstractController
 {
-    private $userService;
+    private $authService;
 
-    public function __construct(UserServiceInterface $userService)
+    public function __construct(AuthServiceInterface $authService)
     {
-        $this->userService = $userService;
+        $this->authService = $authService;
     }
 
     /**
-     * @Route("/api/auth/signup", name="signup", methods={"POST"})
+     * @Route("/signup", name="signup", methods={"POST"})
      */
     public function signup(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-
-        try {
-            $user = $this->userService->signup($data);
-        } catch (\Exception $e) {
-            return $this->json(['error' => $e->getMessage()], 400);
-        }
-
-        return $this->json(['message' => 'User created', 'id' => $user->getId()], 201);
+        $result = $this->authService->register($data);
+        return new JsonResponse( EntityMapperUtils::mapUserToArray(  $result,), JsonResponse::HTTP_CREATED);
     }
+
+    /**
+     * @Route("/login", name="login", methods={"POST"})
+     * @throws \Exception
+     */
+    public function login(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $result = $this->authService->login($data);
+        return new JsonResponse( EntityMapperUtils::mapUserToArray(  $result,), JsonResponse::HTTP_OK);
+
+
+    }
+
 }

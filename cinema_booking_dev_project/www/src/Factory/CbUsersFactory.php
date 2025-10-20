@@ -17,16 +17,21 @@ class CbUsersFactory implements FactoryInterface
     public function create(array $data)
     {
         $entity = new CbUsers();
+
         foreach ($data as $key => $value) {
-            $method = 'set' . ucfirst($key);
+            // Convert snake_case to CamelCase for setter
+            $method = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
             if (method_exists($entity, $method)) {
                 $entity->$method($value !== '' ? $value : null);
             }
         }
+
         $this->em->persist($entity);
         $this->em->flush();
+
         return $entity;
     }
+
 
     public function getById($id)
     {

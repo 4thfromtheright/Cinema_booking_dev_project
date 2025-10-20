@@ -7,7 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CbBooking
  *
- * @ORM\Table(name="CB_BOOKING", uniqueConstraints={@ORM\UniqueConstraint(name="showing_id", columns={"showing_id", "seat_id"})}, indexes={@ORM\Index(name="seat_id", columns={"seat_id"}), @ORM\Index(name="user_id", columns={"user_id"}), @ORM\Index(name="IDX_A840D284F436DC5", columns={"showing_id"})})
+ * @ORM\Table(
+ *     name="CB_BOOKING",
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="showing_seat_unique", columns={"showing_id", "seat_id"})},
+ *     indexes={@ORM\Index(name="user_idx", columns={"user_id"}), @ORM\Index(name="showing_idx", columns={"showing_id"})}
+ * )
  * @ORM\Entity
  */
 class CbBooking
@@ -15,7 +19,7 @@ class CbBooking
     /**
      * @var int
      *
-     * @ORM\Column(name="booking_id", type="integer", nullable=false)
+     * @ORM\Column(name="booking_id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -24,17 +28,15 @@ class CbBooking
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="booking_time", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="booking_time", type="datetime", nullable=false)
      */
-    private $bookingTime = 'CURRENT_TIMESTAMP';
+    private $bookingTime;
 
     /**
      * @var \CbUsers
      *
      * @ORM\ManyToOne(targetEntity="CbUsers")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
-     * })
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $user;
 
@@ -42,9 +44,7 @@ class CbBooking
      * @var \CbShowings
      *
      * @ORM\ManyToOne(targetEntity="CbShowings")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="showing_id", referencedColumnName="showing_id")
-     * })
+     * @ORM\JoinColumn(name="showing_id", referencedColumnName="showing_id")
      */
     private $showing;
 
@@ -52,11 +52,21 @@ class CbBooking
      * @var \CbSeats
      *
      * @ORM\ManyToOne(targetEntity="CbSeats")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="seat_id", referencedColumnName="seat_id")
-     * })
+     * @ORM\JoinColumn(name="seat_id", referencedColumnName="seat_id")
      */
     private $seat;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="confirmation_code", type="string", length=20, nullable=false)
+     */
+    private $confirmationCode;
+
+    public function __construct()
+    {
+        $this->bookingTime = new \DateTime();
+    }
 
     public function getBookingId(): ?int
     {
@@ -71,7 +81,6 @@ class CbBooking
     public function setBookingTime(\DateTimeInterface $bookingTime): self
     {
         $this->bookingTime = $bookingTime;
-
         return $this;
     }
 
@@ -83,7 +92,6 @@ class CbBooking
     public function setUser(?CbUsers $user): self
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -95,7 +103,6 @@ class CbBooking
     public function setShowing(?CbShowings $showing): self
     {
         $this->showing = $showing;
-
         return $this;
     }
 
@@ -107,9 +114,17 @@ class CbBooking
     public function setSeat(?CbSeats $seat): self
     {
         $this->seat = $seat;
-
         return $this;
     }
 
+    public function getConfirmationCode(): ?string
+    {
+        return $this->confirmationCode;
+    }
 
+    public function setConfirmationCode(string $confirmationCode): self
+    {
+        $this->confirmationCode = $confirmationCode;
+        return $this;
+    }
 }

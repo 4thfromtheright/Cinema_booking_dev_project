@@ -1,37 +1,32 @@
 <?php
+
 namespace App\Controller;
 
-use App\Service\FactoryServiceProviderInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\BookingService;
+use App\Utils\EntityMapperUtils;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-
-class ConfirmationController extends AbstractController
+class ConfirmationController
 {
-    private $factoryProvider;
+    private $bookingService;
 
-    public function __construct(FactoryServiceProviderInterface $factoryProvider)
+    public function __construct(BookingService $bookingService)
     {
-        $this->factoryProvider = $factoryProvider;
+        $this->bookingService = $bookingService;
     }
 
     /**
-     * @Route("/api/bookings/{id}/confirmation", name="api_booking_confirmation", methods={"GET"})
+     * @Route("/api/bookings/confirm/{id}", name="booking_confirmation", methods={"GET"})
      */
-    public function show($id): JsonResponse
+    public function confirm(int $id)
     {
-        $booking = $this->factoryProvider->getBookingFactory()->getById($id);
-        if (!$booking) {
-            return $this->json(['error' => 'Booking not found'], 404);
+        try {
+            $booking = $this->bookingService->getBookingById($id);
+            return EntityMapperUtils::mapBookingToArray($booking);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 404);
         }
-
-        // For PDF generation, you can generate and send a URL to the frontend
-        $pdfUrl = '/tickets/' . $booking->getBookingId() . '.pdf';
-
-        return $this->json([
-            'reference' => $booking->getBookingId(),
-            'pdf_url' => $pdfUrl
-        ]);
     }
 }

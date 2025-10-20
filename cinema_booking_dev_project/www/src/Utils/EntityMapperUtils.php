@@ -10,16 +10,13 @@ use App\Entity\CbShowings;
 use App\Entity\CbTheater;
 use App\Entity\CbUsers;
 
-
-
-//so apparently serialization of objects isnt just cooked in. struggled to get anything to work with 7.4 heres a giant time sink of mapping to arrays
 class EntityMapperUtils
 {
-
     public static function mapBookingToArray(CbBooking $booking): array
     {
         return [
             'bookingId' => $booking->getBookingId(),
+            'confirmationCode'=> $booking->getConfirmationCode(),
             'bookingTime' => $booking->getBookingTime()->format('Y-m-d H:i:s'),
             'userId' => $booking->getUser() ? $booking->getUser()->getUserId() : null,
             'userName' => $booking->getUser() ? $booking->getUser()->getName() : null,
@@ -30,7 +27,6 @@ class EntityMapperUtils
                 : null,
             'seatId' => $booking->getSeat() ? $booking->getSeat()->getSeatId() : null,
             'seatNumber' => $booking->getSeat() ? $booking->getSeat()->getSeatNumber() : null,
-            'rowLabel' => $booking->getSeat() ? $booking->getSeat()->getRowLabel() : null,
             'theaterName' => $booking->getSeat() && $booking->getSeat()->getTheater()
                 ? $booking->getSeat()->getTheater()->getName()
                 : null
@@ -46,7 +42,6 @@ class EntityMapperUtils
         ];
     }
 
-
     public static function mapFilmToArray(CbFilms $film): array
     {
         return [
@@ -58,11 +53,6 @@ class EntityMapperUtils
         ];
     }
 
-
-
-
-
-
     public static function mapSeatToArray(CbSeats $seat): array
     {
         return [
@@ -73,21 +63,22 @@ class EntityMapperUtils
             'theaterName' => $seat->getTheater() ? $seat->getTheater()->getName() : null
         ];
     }
+
     public static function mapShowingToArray(CbShowings $showing): array
     {
+        $film = $showing->getFilm(); // <--- corrected here
+
         return [
             'showingId' => $showing->getShowingId(),
             'showTime' => $showing->getShowTime()->format('Y-m-d H:i:s'),
             'theaterId' => $showing->getTheater() ? $showing->getTheater()->getTheaterId() : null,
             'theaterName' => $showing->getTheater() ? $showing->getTheater()->getName() : null,
-            'filmId' => $showing->getFilm() ? $showing->getFilm()->getFilmId() : null,
-            'filmTitle' => $showing->getFilm() ? $showing->getFilm()->getTitle() : null,
-            'filmGenre' => $showing->getFilm() ? $showing->getFilm()->getGenre() : null,
-            'durationMinutes' => $showing->getFilm() ? $showing->getFilm()->getDurationMinutes() : null
+            'filmId' => $film ? $film->getFilmId() : null,
+            'filmTitle' => $film ? $film->getTitle() : null,
+            'filmGenre' => $film ? $film->getGenre() : null,
+            'durationMinutes' => $film ? $film->getDurationMinutes() : null
         ];
     }
-
-
 
     public static function mapTheaterToArray(CbTheater $theater): array
     {
@@ -101,7 +92,6 @@ class EntityMapperUtils
         ];
     }
 
-
     public static function mapUserToArray(CbUsers $user): array
     {
         return [
@@ -109,18 +99,12 @@ class EntityMapperUtils
             'name' => $user->getName(),
             'email' => $user->getEmail(),
             'createdAt' => $user->getCreatedAt()->format('Y-m-d H:i:s')
-
         ];
     }
 
-
     public static function mapEntitiesToArrays(array $entities, string $entityType): array
     {
-        return array_map(function($entity)
-        use ($entityType) {
-            return self::mapEntityToArray($entity, $entityType);
-        },
-            $entities);
+        return array_map(fn($entity) => self::mapEntityToArray($entity, $entityType), $entities);
     }
 
     public static function mapEntityToArray($entity, string $entityType): array

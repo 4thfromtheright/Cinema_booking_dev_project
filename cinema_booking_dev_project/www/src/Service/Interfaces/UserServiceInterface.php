@@ -2,10 +2,8 @@
 
 namespace App\Service;
 
-use App\Entity\CbUsers;
-
 interface UserServiceInterface
 {
-    public function signup(array $data): CbUsers;
-    public function getUserByEmail(string $email): ?CbUsers;
+    public function getUserById(int $id);
+    public function getAllUsers();
 }

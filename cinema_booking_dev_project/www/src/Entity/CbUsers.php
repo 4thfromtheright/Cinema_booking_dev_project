@@ -13,6 +13,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class CbUsers implements UserInterface
 {
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime(); // initialize properly
+    }
+
     public function getRoles(): array
     {
         return ['ROLE_USER'];
@@ -30,8 +35,6 @@ class CbUsers implements UserInterface
 
     public function getSalt() {}
     public function eraseCredentials() {}
-
-
 
     /**
      * @var int
@@ -68,7 +71,7 @@ class CbUsers implements UserInterface
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
      */
-    private $createdAt = 'CURRENT_TIMESTAMP';
+    private $createdAt;
 
     public function getUserId(): ?int
     {
@@ -83,7 +86,6 @@ class CbUsers implements UserInterface
     public function setName(string $name): self
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -95,7 +97,6 @@ class CbUsers implements UserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -107,7 +108,6 @@ class CbUsers implements UserInterface
     public function setPasswordHash(string $passwordHash): self
     {
         $this->passwordHash = $passwordHash;
-
         return $this;
     }
 
@@ -119,9 +119,6 @@ class CbUsers implements UserInterface
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
-
-
 }

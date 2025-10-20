@@ -1,21 +1,19 @@
 # config/services.yaml
 
 parameters:
-# You can define global parameters here if needed
-# e.g. app.default_timezone: 'Africa/Johannesburg'
+# Global parameters can go here
 
 services:
-    # default configuration for services in this file
     _defaults:
-        autowire: true      # Automatically inject dependencies
-        autoconfigure: true # Automatically apply Symfony tags
-        public: false       # Services are private by default
+        autowire: true
+        autoconfigure: true
+        public: false
 
     # Controllers
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-        public: true        # Controllers must be public for routing
+        public: true
 
     # Factories
     App\Factory\:
@@ -25,6 +23,23 @@ services:
     App\Service\:
         resource: '../src/Service/*'
 
+     #repos
+    App\Repository\:
+        resource: '../src/Repository'
+        tags: [ 'doctrine.repository_service' ]
+        autowire: true
+
+
+    # Bind interfaces to concrete services
+    App\Service\AuthServiceInterface: '@App\Service\AuthService'
+    App\Service\BookingServiceInterface: '@App\Service\BookingService'
+    App\Service\CinemaServiceInterface: '@App\Service\CinemaService'
+    App\Service\FilmServiceInterface: '@App\Service\FilmService'
+    App\Service\UserServiceInterface: '@App\Service\UserService'
+    App\Service\TheaterServiceInterface: '@App\Service\TheaterService'
     # Explicit alias for your FactoryServiceProviderInterface
     App\Services\FactoryServiceProviderInterface:
         alias: App\Services\FactoryServiceProvider
+    # Explicit interface to implementation mapping
+    App\Service\Interfaces\AuthServiceInterface:
+        alias: App\Service\AuthService
