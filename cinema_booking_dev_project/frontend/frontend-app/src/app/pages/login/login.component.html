@@ -1,0 +1,28 @@
+<div class="login-container">
+  <h1>{{ isSignup ? 'Sign Up' : 'Login' }}</h1>
+  
+  <form (submit)="submit(); $event.preventDefault()">
+    <div *ngIf="isSignup">
+      <label>Name</label>
+      <input type="text" [(ngModel)]="name" name="name" required>
+    </div>
+
+    <label>Email</label>
+    <input type="email" [(ngModel)]="email" name="email" required>
+
+    <label>Password</label>
+    <input type="password" [(ngModel)]="password" name="password" required>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <button type="submit">{{ isSignup ? 'Sign Up' : 'Login' }}</button>
+  </form>
+
+  <p>
+    <a (click)="toggleMode()" style="cursor:pointer">
+      {{ isSignup ? 'Already have an account? Login' : 'No account? Sign up' }}
+    </a>
+  </p>
+
+  <button *ngIf="isLoggedIn()" (click)="goToBookings()">View My Bookings</button>
+</div>

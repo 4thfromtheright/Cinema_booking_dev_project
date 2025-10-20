@@ -1,0 +1,46 @@
+<div class="container">
+
+  <header class="header">
+    <h1>Cinema Booking</h1>
+    <div class="header-buttons">
+      <button *ngIf="!isLoggedIn()" (click)="goToLogin()">Login / Sign Up</button>
+<button *ngIf="isLoggedIn()" (click)="goToBookings()">My Bookings</button>
+
+    </div>
+  </header>
+
+  <section class="selection">
+    <div class="select-group">
+      <label for="cinema">Cinema:</label>
+      <select id="cinema" [(ngModel)]="selectedCinema" (change)="selectCinema(selectedCinema)">
+        <option *ngFor="let cinema of cinemas" [ngValue]="cinema">{{ cinema.name }}</option>
+      </select>
+    </div>
+
+    <div class="select-group" *ngIf="theaters.length > 0">
+      <label for="theater">Theater:</label>
+      <select id="theater" [(ngModel)]="selectedTheater" (change)="selectTheater(selectedTheater)">
+        <option *ngFor="let theater of theaters" [ngValue]="theater">{{ theater.name }}</option>
+      </select>
+    </div>
+
+    <div class="select-group" *ngIf="films.length > 0">
+      <label for="film">Film:</label>
+      <select id="film" [(ngModel)]="selectedFilm" (change)="selectFilm(selectedFilm)">
+        <option *ngFor="let film of films" [ngValue]="film">{{ film.title }}</option>
+      </select>
+    </div>
+  </section>
+
+  <section class="showings" *ngIf="showings.length > 0">
+    <h2>Available Showings</h2>
+    <div class="showing-card" *ngFor="let showing of showings">
+      <div class="showing-info">
+        <p><strong>Time:</strong> {{ showing.showTime }}</p>
+
+      </div>
+      <button (click)="book(showing)">Book Now</button>
+    </div>
+  </section>
+
+</div>

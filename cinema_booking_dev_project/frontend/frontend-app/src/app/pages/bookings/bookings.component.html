@@ -1,0 +1,16 @@
+<div class="booking-container">
+  <h1>Book Your Seats</h1>
+  <p><strong>Movie:</strong> {{ showing?.film?.title }}</p>
+  <p><strong>Theater:</strong> {{ showing?.theater?.name }}</p>
+
+  <div class="seats-grid">
+    <button *ngFor="let seat of availableSeats" 
+            [class.selected]="selectedSeats.includes(seat)"
+            (click)="toggleSeat(seat)">
+      Seat {{ seat }}
+    </button>
+  </div>
+
+  <button (click)="bookNow()" [disabled]="selectedSeats.length === 0">Book Now</button>
+  <button (click)="back()">Back</button>
+</div>

@@ -1,0 +1,11 @@
+<div class="confirmation-container">
+  <h1>Booking Confirmation</h1>
+  <p><strong>Movie:</strong> {{ showing?.film?.title }}</p>
+  <p><strong>Theater:</strong> {{ showing?.theater?.name }}</p>
+
+  <div *ngFor="let code of confirmationCodes">
+    <p><strong>Confirmation Code:</strong> {{ code }}</p>
+  </div>
+
+  <button (click)="backToHome()">Back to Home</button>
+</div>
