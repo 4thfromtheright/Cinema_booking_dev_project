@@ -94,7 +94,7 @@ bookSeats(showingId: number, seatIds: number[]) {
     showingId: showingId,
     seatIds: seatIds
   };
-
+console.log(body)
   return this.http.post<any>(`${this.apiUrl}/bookings/`, body);
 }
 

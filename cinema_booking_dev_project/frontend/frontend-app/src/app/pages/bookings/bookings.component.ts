@@ -9,8 +9,9 @@ import { ApiService } from '../../services/api.service';
 export class BookingsComponent implements OnInit {
   showingId: number = 0;
   showing: any = null;
-  selectedSeats: number[] = [];
-  availableSeats: number[] = [];
+  selectedSeatIds: number[] = [];
+  selectedSeatNumbers: string[] = [];
+  isBooking: boolean = false;
 
   constructor(
     private api: ApiService,
@@ -27,34 +28,64 @@ export class BookingsComponent implements OnInit {
 
     this.api.getShowing(this.showingId).subscribe(data => {
       this.showing = data;
-      // Assuming showing.seats is an array of all seats with availability
-      this.availableSeats = this.showing.seats.filter((s: any) => !s.booked).map((s: any) => s.number);
     });
   }
 
-  toggleSeat(seat: number) {
-    const index = this.selectedSeats.indexOf(seat);
+  toggleSeat(seat: any) {
+    if (seat.booked) {
+      return;
+    }
+
+    const index = this.selectedSeatIds.indexOf(seat.id);
     if (index > -1) {
-      this.selectedSeats.splice(index, 1);
+      this.selectedSeatIds.splice(index, 1);
+      this.selectedSeatNumbers.splice(index, 1);
     } else {
-      this.selectedSeats.push(seat);
+      this.selectedSeatIds.push(seat.id);
+      this.selectedSeatNumbers.push(seat.number);
     }
   }
 
-  bookNow() {
-    if (this.selectedSeats.length === 0) return;
+bookNow() {
+  if (this.selectedSeatIds.length === 0 || this.isBooking) return;
 
-    // Navigate to confirmation page with query params
-    this.router.navigate(['/confirmation'], { 
-      queryParams: { showingId: this.showingId, seats: this.selectedSeats.join(',') } 
-    });
-  }
+  this.isBooking = true;
+  
+  this.api.bookSeats(this.showingId, this.selectedSeatIds).subscribe({
+    next: (response) => {
+      this.isBooking = false;
+      console.log('Booking response:', response); // Debug log
+      
+      // The response should be an array of booking objects
+      // Extract confirmation codes from each booking object
+      const confirmationCodes = response.map((booking: any) => {
+        console.log('Booking object:', booking); // Debug log
+        return booking.confirmationCode;
+      });
+      
+      console.log('Extracted codes:', confirmationCodes); // Debug log
+      
+      // Navigate with the data
+      this.router.navigate(['/confirmation'], { 
+        queryParams: { 
+          showingId: this.showingId,
+          confirmationCodes: confirmationCodes.join(','),
+          seatNumbers: this.selectedSeatNumbers.join(','),
+          filmTitle: this.showing.film.title,
+          theaterName: this.showing.theater.name,
+          showTime: this.showing.showTime
+        } 
+      });
+    },
+    error: (error) => {
+      this.isBooking = false;
+      console.error('Booking failed:', error);
+      alert('Booking failed. Please try again.');
+    }
+  });
+}
 
   back() {
     this.router.navigate(['/']);
-  }
-
-  seatClass(seat: number) {
-    return this.selectedSeats.includes(seat) ? 'seat-selected' : '';
   }
 }

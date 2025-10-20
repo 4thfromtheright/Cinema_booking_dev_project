@@ -3,14 +3,24 @@
   <p><strong>Movie:</strong> {{ showing?.film?.title }}</p>
   <p><strong>Theater:</strong> {{ showing?.theater?.name }}</p>
 
+
+  <div *ngIf="selectedSeatNumbers.length > 0" class="selected-seats">
+    <strong>Selected Seats:</strong> {{ selectedSeatNumbers.join(', ') }}
+  </div>
+
   <div class="seats-grid">
-    <button *ngFor="let seat of availableSeats" 
-            [class.selected]="selectedSeats.includes(seat)"
+    <button *ngFor="let seat of showing?.seats || []" 
+            [class.selected]="selectedSeatIds.includes(seat.id)"
+            [class.booked]="seat.booked"
+            [disabled]="seat.booked"
             (click)="toggleSeat(seat)">
-      Seat {{ seat }}
+      Seat {{ seat.number }}
+      <span *ngIf="seat.booked" class="booked-badge">Booked</span>
     </button>
   </div>
 
-  <button (click)="bookNow()" [disabled]="selectedSeats.length === 0">Book Now</button>
+  <button (click)="bookNow()" [disabled]="selectedSeatIds.length === 0">
+    Book Now ({{ selectedSeatNumbers.length }} seats)
+  </button>
   <button (click)="back()">Back</button>
 </div>

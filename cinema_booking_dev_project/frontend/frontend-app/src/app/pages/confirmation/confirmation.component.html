@@ -1,11 +1,30 @@
 <div class="confirmation-container">
-  <h1>Booking Confirmation</h1>
-  <p><strong>Movie:</strong> {{ showing?.film?.title }}</p>
-  <p><strong>Theater:</strong> {{ showing?.theater?.name }}</p>
-
-  <div *ngFor="let code of confirmationCodes">
-    <p><strong>Confirmation Code:</strong> {{ code }}</p>
+  <h2>Booking Confirmation</h2>
+  
+  <div *ngIf="confirmationCodes.length > 0" class="success-message">
+    <h3>Booking Successful</h3>
+    
+    <div class="booking-details">
+      <p><strong>Movie:</strong> {{ showing?.film?.title }}</p>
+      <p><strong>Theater:</strong> {{ showing?.theater?.name }}</p>
+      <p><strong>Show Time:</strong> {{ showing?.showTime | date:'medium' }}</p>
+      <p><strong>Seats:</strong> {{ seatNumbers.join(', ') }}</p>
+      <p><strong>Total Seats:</strong> {{ seatNumbers.length }}</p>
+    </div>
+    
+    <div class="confirmation-codes" *ngIf="confirmationCodes.length > 0">
+      <h4>Confirmation Code{{ confirmationCodes.length > 1 ? 's' : '' }}:</h4>
+      <div class="codes-list">
+        <div *ngFor="let code of confirmationCodes" class="confirmation-code">
+          {{ code }}
+        </div>
+      </div>
+    </div>
   </div>
 
-  <button (click)="backToHome()">Back to Home</button>
+  <div *ngIf="confirmationCodes.length === 0" class="loading">
+    <p>Loading booking details...</p>
+  </div>
+
+  <button (click)="backToHome()" class="home-btn">Back to Home</button>
 </div>
