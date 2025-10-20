@@ -70,7 +70,7 @@ class ShowingsService implements ShowingsServiceInterface
         return $showings;
     }
 
-    public function getShowingById($id)
+    public function getShowingById($id)  //maybe works
     {
         $showing = $this->showingsRepository->find($id);
         if (!$showing) {
@@ -78,20 +78,21 @@ class ShowingsService implements ShowingsServiceInterface
         }
 
         $theater = $showing->getTheater();
-        $allSeats = $theater->getSeats()->toArray(); // Convert Doctrine Collection to array
+        $allSeats = $theater->getSeats()->toArray();
 
-        // Get bookings for this showing
+
         $bookings = $this->bookingRepository->findBy(['showing' => $showing]);
 
-        // Map booked seat numbers
-        $bookedSeatNumbers = array_map(fn($b) => $b->getSeatNumber(), $bookings);
 
-        // Build seats array with booked status
-        $seatsArray = array_map(function($seat) use ($bookedSeatNumbers) {
+        $bookedSeats =
+            array_map(fn($b) => $b->getSeat()->getSeatID(), $bookings);
+
+
+        $seatsArray = array_map(function($seat) use ($bookedSeats) {
             return [
                 'id' => $seat->getSeatId(),
                 'number' => $seat->getSeatNumber(),
-                'booked' => in_array($seat->getSeatNumber(), $bookedSeatNumbers)
+                'booked' => in_array($seat->getSeatId(), $bookedSeats)
             ];
         }, $allSeats);
 
