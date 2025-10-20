@@ -41,17 +41,21 @@ services:
       - db
 
   frontend:
-  image: node:18
-  container_name: cinema_frontend
-  working_dir: /app
-  volumes:
-    - ./frontend:/app
-    - /app/node_modules
-  ports:
-    - "4200:4200"
-  command: >
-    sh -c "npm install && npm start"
-
+    build:
+      context: ./frontend
+    container_name: cinema_frontend
+    volumes:
+      - ./frontend/frontend-app:/app
+      - /app/node_modules
+    ports:
+      - "4200:4200"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    working_dir: /app
+    command: >
+      sh -c "npm install && ng serve --host 0.0.0.0 --poll 1000 --disable-host-check"
+    depends_on:
+      - web
 
 volumes:
   db_data:

@@ -1,0 +1,92 @@
+-- Disable foreign key checks to avoid errors during import
+SET FOREIGN_KEY_CHECKS=0;
+
+-- Table structure for table CB_CINEMA
+DROP TABLE IF EXISTS `CB_CINEMA`;
+CREATE TABLE `CB_CINEMA` (
+  `cinema_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `location` varchar(255) NOT NULL,
+  PRIMARY KEY (`cinema_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Table structure for table CB_USERS
+DROP TABLE IF EXISTS `CB_USERS`;
+CREATE TABLE `CB_USERS` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Table structure for table CB_FILMS
+DROP TABLE IF EXISTS `CB_FILMS`;
+CREATE TABLE `CB_FILMS` (
+  `film_id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(150) NOT NULL,
+  `genre` varchar(50) DEFAULT NULL,
+  `duration_minutes` int(11) DEFAULT NULL,
+  `description` text,
+  PRIMARY KEY (`film_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Table structure for table CB_THEATER
+DROP TABLE IF EXISTS `CB_THEATER`;
+CREATE TABLE `CB_THEATER` (
+  `theater_id` int(11) NOT NULL AUTO_INCREMENT,
+  `cinema_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `seat_count` int(11) NOT NULL,
+  PRIMARY KEY (`theater_id`),
+  KEY `cinema_id` (`cinema_id`),
+  CONSTRAINT `CB_THEATER_ibfk_1` FOREIGN KEY (`cinema_id`) REFERENCES `CB_CINEMA` (`cinema_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Table structure for table CB_SEATS
+DROP TABLE IF EXISTS `CB_SEATS`;
+CREATE TABLE `CB_SEATS` (
+  `seat_id` int(11) NOT NULL AUTO_INCREMENT,
+  `theater_id` int(11) NOT NULL,
+  `seat_number` varchar(10) NOT NULL,
+  `row_label` varchar(5) DEFAULT NULL,
+  PRIMARY KEY (`seat_id`),
+  UNIQUE KEY `theater_id` (`theater_id`,`seat_number`),
+  CONSTRAINT `CB_SEATS_ibfk_1` FOREIGN KEY (`theater_id`) REFERENCES `CB_THEATER` (`theater_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Table structure for table CB_SHOWINGS
+DROP TABLE IF EXISTS `CB_SHOWINGS`;
+CREATE TABLE `CB_SHOWINGS` (
+  `showing_id` int(11) NOT NULL AUTO_INCREMENT,
+  `theater_id` int(11) NOT NULL,
+  `film_id` int(11) NOT NULL,
+  `show_time` datetime NOT NULL,
+  PRIMARY KEY (`showing_id`),
+  KEY `theater_id` (`theater_id`),
+  KEY `film_id` (`film_id`),
+  CONSTRAINT `CB_SHOWINGS_ibfk_1` FOREIGN KEY (`theater_id`) REFERENCES `CB_THEATER` (`theater_id`) ON DELETE CASCADE,
+  CONSTRAINT `CB_SHOWINGS_ibfk_2` FOREIGN KEY (`film_id`) REFERENCES `CB_FILMS` (`film_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Table structure for table CB_BOOKING
+DROP TABLE IF EXISTS `CB_BOOKING`;
+CREATE TABLE `CB_BOOKING` (
+  `booking_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `showing_id` int(11) NOT NULL,
+  `seat_id` int(11) NOT NULL,
+  `booking_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`booking_id`),
+  UNIQUE KEY `showing_id` (`showing_id`,`seat_id`),
+  KEY `user_id` (`user_id`),
+  KEY `seat_id` (`seat_id`),
+  CONSTRAINT `CB_BOOKING_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `CB_USERS` (`user_id`) ON DELETE CASCADE,
+  CONSTRAINT `CB_BOOKING_ibfk_2` FOREIGN KEY (`showing_id`) REFERENCES `CB_SHOWINGS` (`showing_id`) ON DELETE CASCADE,
+  CONSTRAINT `CB_BOOKING_ibfk_3` FOREIGN KEY (`seat_id`) REFERENCES `CB_SEATS` (`seat_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Re-enable foreign key checks
+SET FOREIGN_KEY_CHECKS=1;
