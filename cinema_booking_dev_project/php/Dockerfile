@@ -1,12 +1,25 @@
 FROM php:7.4-apache
 
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git unzip zip libzip-dev libicu-dev g++ \
-    && docker-php-ext-install intl pdo pdo_mysql zip \
-    && a2enmod rewrite
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip
 
-RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+
+# Get latest Composer (compatible with PHP 7.4)
+COPY --from=composer:2.2 /usr/bin/composer /usr/bin/composer
+
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
 
 WORKDIR /var/www/html
-EXPOSE 80
-CMD ["apachectl", "-D", "FOREGROUND"]

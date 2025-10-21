@@ -13,6 +13,7 @@ services:
     environment:
       APACHE_RUN_USER: www-data
       APACHE_RUN_GROUP: www-data
+    command: ["apache2-foreground"]
 
   db:
     image: mysql:5.7
