@@ -1,15 +1,74 @@
-# Symfony
-/www/html/var/
-/www/html/vendor/
-/www/html/node_modules/
-/www/html/.env.local
-/.idea
-/.vscode
 
-# Docker
-db_data/
+# Symfony cache and logs
+cinema_booking_dev_project/www/var/
+cinema_booking_dev_project/www/bin/
+cinema_booking_dev_project/www/vendor/
+cinema_booking_dev_project/www/.env
+cinema_booking_dev_project/www/.env.local
+cinema_booking_dev_project/www/.env.test
 
-node_modules/
+# Angular build and dependencies
+cinema_booking_dev_project/frontend/frontend-app/node_modules/
+cinema_booking_dev_project/frontend/frontend-app/dist/
+cinema_booking_dev_project/frontend/frontend-app/.angular/
+
+# PHP dependencies in frontend directory (shouldn't be there)
+cinema_booking_dev_project/frontend/vendor/
+cinema_booking_dev_project/frontend/node_modules/
+
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
-*.log
-dist/
+Thumbs.db
+Desktop.ini
+
+
+
+db dump/*.sql
+
+
+simple_structure.txt
+structure.txt
+*.tmp
+*.temp
+
+
+# Keep all Docker and config files
+!cinema_booking_dev_project/docker-compose.yml
+!cinema_booking_dev_project/php/
+!cinema_booking_dev_project/apache/
+!cinema_booking_dev_project/frontend/Dockerfile
+
+# Keep Symfony source
+!cinema_booking_dev_project/www/src/
+!cinema_booking_dev_project/www/config/
+!cinema_booking_dev_project/www/templates/
+!cinema_booking_dev_project/www/public/
+!cinema_booking_dev_project/www/migrations/
+!cinema_booking_dev_project/www/tests/
+!cinema_booking_dev_project/www/translations/
+!cinema_booking_dev_project/www/composer.json
+!cinema_booking_dev_project/www/composer.lock
+
+# Keep Angular source
+!cinema_booking_dev_project/frontend/frontend-app/src/
+!cinema_booking_dev_project/frontend/frontend-app/angular.json
+!cinema_booking_dev_project/frontend/frontend-app/package.json
+!cinema_booking_dev_project/frontend/frontend-app/package-lock.json
+!cinema_booking_dev_project/frontend/frontend-app/tsconfig.json
+!cinema_booking_dev_project/frontend/frontend-app/tsconfig.app.json
+!cinema_booking_dev_project/frontend/frontend-app/tsconfig.spec.json
+!cinema_booking_dev_project/frontend/frontend-app/proxy.conf.json
+!cinema_booking_dev_project/frontend/frontend-app/README.md
+
+# Keep project files
+!README.md
+!create-project.sh
+!"db dump/sql import myphp.txt"
+!"db dump/sql data import.txt"
