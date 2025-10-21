@@ -1,5 +1,5 @@
 // src/app/pages/view-bookings/view-bookings.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef  } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class ViewBookingsComponent implements OnInit {
   bookings: any[] = [];
 
-  constructor(private api: ApiService, private router: Router) {}
+  constructor(private api: ApiService, private router: Router,    private cdRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     const user = this.api.getSessionUser();
@@ -25,10 +25,16 @@ export class ViewBookingsComponent implements OnInit {
   cancel(id: number) {
     this.api.cancelBooking(id).subscribe({
       next: () => {
-        this.bookings = this.bookings.filter(b => b.id !== id);
+        this.bookings = this.bookings.filter(b => b.bookingId !== id);
+          alert('Booking cancelled successfully!');
+          this.cdRef.detectChanges();
       },
       error: err => console.error('Failed to cancel booking', err)
     });
+  }
+
+    trackByBookingId(index: number, booking: any): number {
+    return booking.bookingId;
   }
 
   goToLogin(){

@@ -16,7 +16,7 @@ export class ConfirmationComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Get all parameters
+  
     const showingId = this.route.snapshot.queryParamMap.get('showingId');
     const codesParam = this.route.snapshot.queryParamMap.get('confirmationCodes');
     const seatsParam = this.route.snapshot.queryParamMap.get('seatNumbers');
@@ -24,18 +24,12 @@ export class ConfirmationComponent implements OnInit {
     const theaterName = this.route.snapshot.queryParamMap.get('theaterName');
     const showTime = this.route.snapshot.queryParamMap.get('showTime');
 
-    console.log('Raw query params:', { // Debug log
-      showingId, codesParam, seatsParam, filmTitle, theaterName, showTime
-    });
+   
 
-    // Parse arrays from comma-separated strings
+    
     this.confirmationCodes = codesParam ? codesParam.split(',') : [];
     this.seatNumbers = seatsParam ? seatsParam.split(',') : [];
-    
-    console.log('Parsed data:', { // Debug log
-      confirmationCodes: this.confirmationCodes,
-      seatNumbers: this.seatNumbers
-    });
+ 
 
     // Reconstruct showing object
     this.showing = {

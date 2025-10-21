@@ -16,7 +16,9 @@
       <h4>Confirmation Code{{ confirmationCodes.length > 1 ? 's' : '' }}:</h4>
       <div class="codes-list">
         <div *ngFor="let code of confirmationCodes" class="confirmation-code">
+        <div></div>
           {{ code }}
+        <div></div>
         </div>
       </div>
     </div>
@@ -25,6 +27,6 @@
   <div *ngIf="confirmationCodes.length === 0" class="loading">
     <p>Loading booking details...</p>
   </div>
+<div><button (click)="backToHome()" class="home-btn">Back to Home</button></div>
 
-  <button (click)="backToHome()" class="home-btn">Back to Home</button>
 </div>

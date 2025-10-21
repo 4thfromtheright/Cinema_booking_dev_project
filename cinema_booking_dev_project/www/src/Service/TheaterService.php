@@ -35,4 +35,9 @@ class TheaterService implements TheaterServiceInterface
 
         return $theaters;
     }
+
+    public function getAll()
+    {
+       return $this->theaterRepo->findAll();
+    }
 }

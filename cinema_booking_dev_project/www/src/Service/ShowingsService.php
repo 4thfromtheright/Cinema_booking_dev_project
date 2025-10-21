@@ -38,7 +38,7 @@ class ShowingsService implements ShowingsServiceInterface
 
 
 
-    public function getAllShowings()
+    public function getAll()
     {
         $showings = $this->showingsRepository->findAll();
         if (!$showings) {

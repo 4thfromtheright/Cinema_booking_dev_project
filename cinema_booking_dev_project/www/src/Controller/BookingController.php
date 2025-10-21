@@ -22,6 +22,20 @@ class BookingController extends AbstractController
     }
 
     /**
+     * @Route("/confirm/{id}", name="booking_confirmation", methods={"GET"})
+     */
+    public function confirm(int $id)
+    {
+        try {
+            $booking = $this->bookingService->getBookingById($id);
+            return EntityMapperUtils::mapBookingToArray($booking);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 404);
+        }
+    }
+
+
+    /**
      * @Route("/", name="create_booking", methods={"POST"})
      */
     public function createBooking(Request $request): JsonResponse

@@ -2,7 +2,6 @@
   padding: 20px;
 }
 
-
 .seats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -18,17 +17,17 @@
   border-radius: 4px;
   position: relative;
   transition: all 0.2s;
+  color: #ffffff;
 }
-/* Apply to body */
+
 body, html {
   height: 100%;
   margin: 0;
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   background: linear-gradient(135deg, #1a1a1a, #2c2c2c);
-  color: #ffffff; /* pure white text */
+  color: #ffffff;
 }
 
-/* Center everything */
 .booking-container,
 .login-container,
 .view-bookings-container,
@@ -40,10 +39,9 @@ body, html {
   padding: 40px 20px;
   min-height: 100vh;
   box-sizing: border-box;
-  color: #ffffff; /* ensure all child text is white */
+  color: #ffffff;
 }
 
-/* Headings */
 h1, h2 {
   font-size: 2.8rem;
   margin-bottom: 20px;
@@ -52,32 +50,28 @@ h1, h2 {
   font-weight: 700;
 }
 
-/* Paragraphs and labels */
 p, label {
   font-size: 1.3rem;
   margin: 8px 0;
   color: #ffffff;
 }
 
-/* Buttons */
 button {
   border: none;
-  color: #ffffff; /* pure white text */
+  color: #ffffff;
   font-size: 1.3rem;
   padding: 12px 28px;
   margin: 10px 5px;
-
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 
 button:hover {
-  
   background-color: #ffffff;
+  color: #000000;
   transform: translateY(-2px);
 }
 
-/* Inputs and selects */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -98,7 +92,6 @@ select:focus {
   border-color: #c71414fa;
 }
 
-/* Seats grid */
 .seats-grid {
   display: flex;
   flex-wrap: wrap;
@@ -121,7 +114,32 @@ select:focus {
   color: #ffffff;
 }
 
-/* Showings cards */
+.seats-grid button:hover:not(:disabled) {
+  background: #e0e0e0;
+  color: #000000;
+}
+
+.seats-grid button.selected {
+  background: #4CAF50;
+  color: white;
+  border-color: #45a049;
+}
+
+.seats-grid button:disabled {
+  background: #ffcccc;
+  color: #ffffff;
+  border-color: #ff9999;
+  cursor: not-allowed;
+}
+
+.booked-badge {
+  display: block;
+  font-size: 10px;
+  color: #ffffff;
+  margin-top: 5px;
+  font-weight: bold;
+}
+
 .showing-card {
   background-color: #2b2b2b;
   padding: 22px;
@@ -134,32 +152,19 @@ select:focus {
   color: #ffffff;
 }
 
-/* List for bookings */
-.view-bookings-container ul {
-  list-style: none;
-  padding: 0;
-}
-
-.view-bookings-container li {
-  background-color: #2b2b2b;
-  margin: 10px 0;
-  padding: 18px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 90%;
-  max-width: 600px;
+a {
   color: #ffffff;
 }
 
-
-
 a:hover {
   text-decoration: underline;
+  color: #ffffff;
 }
 
-/* Responsive */
+.view-bookings-container li {
+  color: #ffffff;
+}
+
 @media (max-width: 600px) {
   .seats-grid button {
     width: 50px;
@@ -179,29 +184,4 @@ a:hover {
     flex-direction: column;
     text-align: center;
   }
-}
-
-.seats-grid button:hover:not(:disabled) {
-  background: #e0e0e0;
-}
-
-.seats-grid button.selected {
-  background: #4CAF50;
-  color: white;
-  border-color: #45a049;
-}
-
-.seats-grid button:disabled {
-  background: #ffcccc;
-  color: #666;
-  border-color: #ff9999;
-  cursor: not-allowed;
-}
-
-.booked-badge {
-  display: block;
-  font-size: 10px;
-  color: #d32f2f;
-  margin-top: 5px;
-  font-weight: bold;
 }

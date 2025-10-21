@@ -70,25 +70,6 @@ signup(username: string, email: string, password: string): Observable<any> {
 }
 
 
-  // Home page
-
-
-  getCinemas(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/cinema/`);
-  }
-
-  getTheaters(cinemaId: number): Observable<any[]> {
-   return this.http.get<any[]>(`${this.apiUrl}/theaters/${cinemaId}`);
-  }
-
-  getFilms(theaterId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/theaters/${theaterId}/films`); 
-  }
-
-  getShowings(filmId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/showings/film/${filmId}`); 
-  }
-
  getShowing(id: number): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/showings/${id}`, { headers: this.authHeaders() });
 }
@@ -133,21 +114,7 @@ console.log(body)
     return this.http.get<any>(`${this.apiUrl}/bookings/confirm/${bookingId}`, { headers: this.authHeaders() }); 
   }
 
-  getAllFilms(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/films/`);
-  }
 
-  getFilmById(filmId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/films/${filmId}`); 
-  }
-
-  getAllShowings(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/showings/`); 
-  }
-
-  getShowingsByTheater(theaterId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/showings/theater/${theaterId}`); 
-  }
 
 
 getHomeDatacached(): Observable<any> {
